@@ -1,0 +1,6 @@
+name: SlotReturnRate
+version: '${version}'
+main: net.minezero.slotreturnrate.SlotReturnRate
+api-version: '1.19'
+commands:
+  slotreturn:

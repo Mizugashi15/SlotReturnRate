@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.*;
 public final class SlotReturnRate extends JavaPlugin {
 
     JavaPlugin plugin;
+    String Perm = "minezero.admin";
     String prefix = "[§eMineZero§2Slot§r]";
     List<String> filenames = new ArrayList<>();
     List<String> symbolAmount = new ArrayList<>();
@@ -21,6 +23,9 @@ public final class SlotReturnRate extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
+
+        plugin.getDataFolder().mkdir();
+
         File file = new File("plugins/MineZeroSlot/slots");
 
         for (File f : file.listFiles()) {
@@ -40,6 +45,10 @@ public final class SlotReturnRate extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (command.getName().equalsIgnoreCase("slotreturn")) {
+
+            Player player = (Player) sender;
+
+            if (!hasPerm(player)) return false;
 
             if (args.length == 2) {
 
@@ -77,7 +86,7 @@ public final class SlotReturnRate extends JavaPlugin {
                 double pot = config.getDouble("stock.default");
                 Random random = new Random();
 
-                int totalcoin = 0;
+                double totalcoin = 0;
                 int totaltry = 0;
                 int totalhit = 0;
                 double totalmoney = 0;
@@ -220,5 +229,13 @@ public final class SlotReturnRate extends JavaPlugin {
         }
 
         return "null";
+    }
+
+    public boolean hasPerm(Player player) {
+        if (!player.hasPermission(Perm)) {
+            player.sendMessage(prefix + "§cあなたには権限がありません！");
+            return false;
+        }
+        return true;
     }
 }
